@@ -4,13 +4,14 @@ import uuid
 from etl.logging import get_logger
 import time
 
+
 class TestLogging(unittest.TestCase):
     def test_logging(self):
         """ Testing logging to cloudwatch"""
 
         log_group_name = "test-etl"
         log_name = "test-etl"
-        logger = get_logger(logger_name=log_name,
+        logger = get_logger(log_name=log_name,
                             log_group=log_group_name)
 
         message = str(uuid.uuid4())

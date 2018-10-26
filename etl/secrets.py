@@ -1,17 +1,21 @@
 import boto3
 import os
+import json
+from botocore.exceptions import ClientError
 
 
-def get_secret(name: str, source: str="envrionment") -> str:
+def get_secret(name: str, source: str="envrionment") -> dict:
     if source == "environment":
-        secret = os.environ.get(name, None)
+        value = os.environ.get(name, None)
+        if value is None:
+            raise ValueError("No such secret in the envrionment")
     elif source == "ssm":
         client = boto3.client("secretsmanager")
         try:
             get_secret_value_response = client.get_secret_value(
                 SecretId=name
             )
-        except boto3.ClientError as e:
+        except ClientError as e:
             if e.response['Error']['Code'] == 'DecryptionFailureException':
                 raise e
             elif e.response['Error']['Code'] == 'InternalServiceErrorException':
@@ -22,11 +26,11 @@ def get_secret(name: str, source: str="envrionment") -> str:
                 raise e
             elif e.response['Error']['Code'] == 'ResourceNotFoundException':
                 raise e
-            else:
-                if 'SecretString' in get_secret_value_response:
-                    secret = get_secret_value_response['SecretString']
-                else:
-                    secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+        if 'SecretString' in get_secret_value_response:
+            secret = json.loads(get_secret_value_response['SecretString'])
+        else:
+            secret = json.loads(base64.b64decode(get_secret_value_response['SecretBinary']))
+            
     else:
         raise NotImplementedError(f"{source} is not a supported source")
     return secret
