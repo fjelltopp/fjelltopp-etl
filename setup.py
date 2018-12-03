@@ -13,7 +13,7 @@ install_reqs = parse_requirements("requirements.txt", session=uuid.uuid1())
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
-    name='Fjelltopp ETL',
+    name='etl',
     version='0.0.1',
     long_description=__doc__,
     packages=find_packages(),
