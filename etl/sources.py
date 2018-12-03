@@ -32,10 +32,10 @@ def get_odk_submission(aggregate_url: str, auth: requests.auth.HTTPDigestAuth,
     form_id_string = f'{form_id}[@version=null and @uiVersion=null]/{form_id}[@key={uuid}]'
     submission = requests.get(aggregate_url + "/view/downloadSubmission",
                               params={"formId": form_id_string}, auth=auth)
-    if submission.status_code == 200:
-        submission = xmltodict.parse(submission.text)["submission"]["data"][form_id]
-        return fix_odk_data(submission)
-    return None
+    if submission.status_code >= 400:
+        raise OdkError(f"Failed to get submissions for form {form_id}")
+    submission = xmltodict.parse(submission.text)["submission"]["data"][form_id]
+    return fix_odk_data(submission)
 
 
 def fix_odk_data(form_submission: dict) -> dict:
