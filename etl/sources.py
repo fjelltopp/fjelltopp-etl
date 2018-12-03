@@ -3,10 +3,16 @@ import pandas as pd
 import xmltodict
 
 
+class OdkError(Exception):
+    pass
+
+
 def get_odk_data(aggregate_url: str, username: str, password: str, form_id: str) -> pd.DataFrame:
     auth = requests.auth.HTTPDigestAuth(username, password)
     submissions = requests.get(aggregate_url + "/view/submissionList",
                                params={"formId": form_id}, auth=auth)
+    if submissions.status_code >= 400:
+        raise OdkError(f"Failed to get submissions for form {form_id}")
     try:
         submissions_dict = xmltodict.parse(submissions.text)["idChunk"]
     except:
