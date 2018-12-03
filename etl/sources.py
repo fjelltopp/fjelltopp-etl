@@ -15,7 +15,7 @@ def get_odk_data(aggregate_url: str, username: str, password: str, form_id: str)
         raise OdkError(f"Failed to get submissions for form {form_id}")
     try:
         submissions_dict = xmltodict.parse(submissions.text)["idChunk"]
-    except:
+    except xmltodict.ParsingInterrupted:
         raise ValueError("Can not parse xml")
     submissions = []
     for individual_submission in submissions_dict["idList"]["id"]:
