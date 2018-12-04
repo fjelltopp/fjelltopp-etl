@@ -12,7 +12,7 @@ class TestODKSource(unittest.TestCase):
             "orx:meta": "should_not_be_there"
         }
 
-        fixed_data = sources.fix_odk_data(data)
+        fixed_data = sources.__fix_odk_data(data)
 
         self.assertEqual(fixed_data, {
             "a": "a",
@@ -29,7 +29,7 @@ class TestODKSource(unittest.TestCase):
 
         url = "http://test.test"
         auth = "http-auth"
-        result = sources.get_odk_submission(url, auth, "test_form", "uuid-a")
+        result = sources.__get_odk_submission(url, auth, "test_form", "uuid-a")
         self.assertEqual(result["person_name"], "09179615-72fd-4ec9-92d7-fa702358ea54")
 
     @patch("etl.sources.requests")
