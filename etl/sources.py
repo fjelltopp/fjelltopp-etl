@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import xmltodict
+from pandas.io.json import json_normalize
 
 
 class OdkError(Exception):
@@ -11,9 +12,28 @@ def get_odk_data(aggregate_url: str, username: str, password: str, form_id: str)
     submissions = __get_odk_submissions(aggregate_url, form_id, password, username)
     return pd.DataFrame(submissions)
 
-def get_flattened_odk_data(aggregate_url: str, username: str, password: str, form_id: str, form_structure: list) -> pd.DataFrame:
-    submissions = __get_odk_submissions(aggregate_url, form_id, password, username)
-    return pd.DataFrame(submissions)
+def get_flattened_odk_data(aggregate_url: str, username: str, password: str, form_id: str, deep_nested_column: str, to_split_column: str) -> pd.DataFrame:
+    result = pd.DataFrame()
+    for submission in __get_odk_submissions(aggregate_url, form_id, password, username):
+        activity_group_ = submission[deep_nested_column]
+        if type(activity_group_) != list:
+            submission[deep_nested_column] = [activity_group_]
+
+        activities_df = json_normalize(submission[deep_nested_column], errors='ignore')
+        activities_df_prop_split = pd.DataFrame(columns=activities_df.columns)
+        for _, activity in activities_df.iterrows():
+            for settlement in activity[to_split_column].split():
+                new_row = activity.copy()
+                new_row[to_split_column] = settlement
+                activities_df_prop_split = activities_df_prop_split.append(new_row)
+        activities_df_prop_split.reset_index(drop=True, inplace=True)
+        size = len(activities_df_prop_split)
+        data_frame = json_normalize(submission).drop(columns=[deep_nested_column])
+        data_frame_ext = pd.concat([data_frame] * size, ignore_index=True)
+
+        submission_df = pd.concat([activities_df_prop_split, data_frame_ext], axis=1)
+        result = pd.concat([result, submission_df])
+    return result
 
 
 def __get_odk_submissions(aggregate_url, form_id, password, username):
@@ -26,14 +46,8 @@ def __get_odk_submissions(aggregate_url, form_id, password, username):
         submissions_dict = xmltodict.parse(submissions.text)["idChunk"]
     except xmltodict.ParsingInterrupted:
         raise ValueError("Can not parse xml")
-    submissions = []
     for submission_id in submissions_dict["idList"]["id"]:
-        submissions.append(
-            __get_odk_submission(aggregate_url,
-                                 auth,
-                                 form_id,
-                                 submission_id))
-    return submissions
+        yield __get_odk_submission(aggregate_url, auth, form_id, submission_id)
 
 
 def __get_odk_submission(aggregate_url: str, auth: requests.auth.HTTPDigestAuth,
