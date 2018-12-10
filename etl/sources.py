@@ -12,7 +12,7 @@ def get_odk_data(aggregate_url: str, username: str, password: str, form_id: str)
     submissions = __get_odk_submissions(aggregate_url, form_id, password, username)
     return pd.DataFrame(submissions)
 
-def get_flattened_odk_data(aggregate_url: str, username: str, password: str, form_id: str, deep_nested_column: str, to_split_column: str) -> pd.DataFrame:
+def get_flattened_odk_data(aggregate_url: str, username: str, password: str, form_id: str, deep_nested_column: str, to_split_column: str, sep='_') -> pd.DataFrame:
     result = pd.DataFrame()
     activity_counter = 0
     for submission in __get_odk_submissions(aggregate_url, form_id, password, username):
@@ -20,7 +20,7 @@ def get_flattened_odk_data(aggregate_url: str, username: str, password: str, for
         if type(activity_group_) != list:
             submission[deep_nested_column] = [activity_group_]
 
-        activities_df = json_normalize(submission[deep_nested_column], errors='ignore')
+        activities_df = json_normalize(submission[deep_nested_column], sep=sep, errors='ignore')
         activities_df_prop_split = pd.DataFrame(columns=activities_df.columns)
         for _, activity in activities_df.iterrows():
             activity_counter += 1
@@ -32,7 +32,7 @@ def get_flattened_odk_data(aggregate_url: str, username: str, password: str, for
                 activities_df_prop_split = activities_df_prop_split.append(new_row)
         activities_df_prop_split.reset_index(drop=True, inplace=True)
         size = len(activities_df_prop_split)
-        data_frame = json_normalize(submission).drop(columns=[deep_nested_column])
+        data_frame = json_normalize(submission, sep=sep).drop(columns=[deep_nested_column])
         data_frame_ext = pd.concat([data_frame] * size, ignore_index=True)
 
         submission_df = pd.concat([activities_df_prop_split, data_frame_ext], axis=1)
