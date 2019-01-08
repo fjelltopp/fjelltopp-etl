@@ -13,6 +13,7 @@ def get_db_engine(database=None, username=None, password=None, host=None, engine
         password = ssm_config["password"]
         host = ssm_config["host"] + ":" + str(ssm_config["port"])
         engine = ssm_config["engine"]
+        database = ssm_config["dbInstanceIdentifier"]
         
     connection_string = f"{engine}://{username}:{password}@{host}/{database}"
 
