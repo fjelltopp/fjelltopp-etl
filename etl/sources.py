@@ -22,7 +22,10 @@ def get_odk_submissions(aggregate_url, form_id, password, username, form_group='
         submissions_dict = xmltodict.parse(submissions.text)["idChunk"]
     except xmltodict.ParsingInterrupted:
         raise ValueError("Can not parse xml")
-    submissions_ids = submissions_dict["idList"]["id"]
+    _response_id_list = submissions_dict["idList"]
+    if not _response_id_list:
+        return []
+    submissions_ids = _response_id_list["id"]
     if not isinstance(submissions_ids, list):
         submissions_ids = [submissions_ids]
     for submission_id in submissions_ids:
