@@ -13,12 +13,27 @@ install_reqs = parse_requirements("requirements.txt", session=uuid.uuid1())
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
-    name='etl',
+    name='fjelltopp-etl',
     version='0.0.1',
     long_description=__doc__,
-    packages=find_packages(),
+    packages=['fjelltopp-etl'],
     include_package_data=True,
     zip_safe=False,
     install_requires=reqs,
-    test_suite='etl.test'
+    test_suite='etl.test',
+    author='Tomek Sabała',
+    author_email='tomek@fjelltopp.org',
+    url='https://github.com/fjelltopp/fjelltopp-etl',
+    download_url='https://github.com/fjelltopp/fjelltopp-etl/v_001.tar.gz',
+    keywords = ['etl', 'dataprocessing', 'pandas'],
+    classifiers=[
+    'Development Status :: 3 - Alpha',
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: Build Tools',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+  ],
 )
