@@ -16,7 +16,7 @@ setup(
     name='fjelltopp-etl',
     version='0.0.1',
     long_description=__doc__,
-    packages=['fjelltopp-etl'],
+    packages=['etl'],
     include_package_data=True,
     zip_safe=False,
     install_requires=reqs,
