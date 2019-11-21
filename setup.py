@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='fjelltopp-etl',
-    version='0.0.2',
+    version='0.0.3',
     long_description=__doc__,
     packages=['etl'],
     include_package_data=True,
