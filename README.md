@@ -26,3 +26,21 @@ It is important to log the execution of our data pipelines. To log directly to c
 ## Scheduling
 
    Scheduling by crontab or other means should be clearly documented in the etl_pipeline
+   
+
+## Relesing a new version
+1. Update the requirements in `setup.py` file.
+2. Update the verion in `setup.py` in a *separate* commit.
+3. Build dist tar.gz file:
+    ```
+    python setup.py sdist
+    ```
+    And after publish the artifact to pypi 
+    ```
+    python3 -m twine upload  dist/*
+    ```
+4. Tag the new release on github.
+    1. Visit _releases_
+    2. Draft a new release (keep the format same as `setup.py` file, e.g. v0.0.4
+    3. Submit the new release
+    
