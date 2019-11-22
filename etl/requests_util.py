@@ -12,4 +12,6 @@ def check_if_response_is_ok(response):
             logger.debug(response.text)
         except JSONDecodeError:
             logger.error(response.text, stack_info=True)
-    return response
+        finally:
+            raise(ConnectionError("Failed to get valid response"))
+    return True

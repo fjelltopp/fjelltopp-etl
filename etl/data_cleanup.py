@@ -1,6 +1,6 @@
 import pandas as pd
 from slugify import slugify
-from . import decorators
+from etl import decorators
 
 @decorators.log_start_and_finalisation("slugifing column names")
 def slugify_column_name(df:pd.DataFrame) -> pd.DataFrame:

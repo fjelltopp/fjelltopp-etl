@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='fjelltopp-etl',
-    version='0.0.3',
+    version='0.0.4',
     long_description=__doc__,
     packages=['etl'],
     include_package_data=True,
@@ -22,6 +22,7 @@ setup(
         "pandas==0.25.3",
         "psycopg2==2.7.5",
         "python-dateutil==2.8.1",
+        "python-slugify==4.0.0",
         "pytz==2019.3",
         "requests==2.20.0",
         "s3transfer==0.2.1",
