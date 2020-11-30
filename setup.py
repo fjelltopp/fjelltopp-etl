@@ -12,7 +12,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "boto3==1.10.25",
-        "botocore==1.13.25",
+        "botocore==1.13.50",
         "certifi==2019.9.11",
         "chardet==3.0.4",
         "docutils==0.15.2",
@@ -20,7 +20,6 @@ setup(
         "jmespath==0.9.4",
         "numpy==1.17.4",
         "pandas==0.25.3",
-        "psycopg2==2.7.5",
         "python-dateutil==2.8.1",
         "python-slugify==4.0.0",
         "pytz==2019.3",
