@@ -28,7 +28,7 @@ setup(
         "six==1.13.0",
         "SQLAlchemy==1.3.11",
         "text-unidecode==1.3",
-        "urllib3==1.25.7",
+        "urllib3==1.26.5",
         "watchtower==0.7.3",
         "xmltodict==0.12.0",
     ],
