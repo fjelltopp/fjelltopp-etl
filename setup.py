@@ -13,7 +13,7 @@ setup(
     install_requires=[
         "boto3==1.20.45",
         "botocore==1.23.45",
-        "certifi==2021.10.8",
+        "certifi==2022.12.7",
         "chardet==4.0.0",
         "docutils==0.18.1",
         "idna==3.3",
